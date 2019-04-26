@@ -31,3 +31,16 @@
     transform: rotate(360deg);
   }
 }
+
+.square {
+  background-color: #EEEEEE; /* Green */
+  border: none;
+  color: white;
+  padding: 40px 40px;
+  margin: 2px 2px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  color: #000000;
+}
