@@ -9,7 +9,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #4a4f4e;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,6 +22,9 @@
 .App-link {
   color: #61dafb;
 }
+.status {
+  padding: 10px;
+}
 
 @keyframes App-logo-spin {
   from {
@@ -33,14 +36,25 @@
 }
 
 .square {
-  background-color: #EEEEEE; /* Green */
+  background-color: #DDDD; /* Green */
   border: none;
-  color: white;
-  padding: 40px 40px;
-  margin: 2px 2px;
+  padding: 20px 20px;
+  margin: 1px 1px;
   text-align: center;
+  width: 40px;
+  height: 40px;
   text-decoration: none;
-  display: inline-block;
+  font-size: 12px;
+  color: #000000;
+}
+
+.resetButton {
+  background-color: #DDDD; /* Green */
+  border: none;
+  padding: 10px 10px;
+  margin: 5px 5px;
+  height: auto;
+  text-align: center;
   font-size: 12px;
   color: #000000;
 }

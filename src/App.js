@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Game from './Components'
 
@@ -9,12 +8,12 @@ class App extends React.Component {
       <div className="App">
         <header className="App-header">
           <Game />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+          <p>TicTacToe IA devoloped by <a href="https://github.com/hudsongeovane/">@hudsongeovane</a></p>
+          <a href="https://github.com/hudsongeovane/tictactoe">
+            Github Project
+          </a>
 
+        </header>
       </div>
 );
   }

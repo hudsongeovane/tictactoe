@@ -4,10 +4,24 @@ import './App.css'
 class Square extends React.Component {
   render() {
     return (
-      <button className="square" onClick={() => this.props.onClick() }>
+      <td className="square" onClick={() => this.props.onClick() }>
         {this.props.value}
-      </button>
+      </td>
     );
+  }
+}
+
+class ResetButton extends React.Component {
+  render() {
+    const reset = "Reset Game";
+
+    return (
+      <tr>
+        <td className="resetButton" onClick={() => this.props.onClick() }>
+        {reset}
+        </td>
+      </tr>
+    )
   }
 }
 
@@ -33,25 +47,36 @@ class Board extends React.Component {
       this.setState({boardstatus: squares, xNext: !this.state.xNext});
     }
   }
+  resetGame() {
+    this.setState({
+      boardstatus: Array(9).fill(null),
+      xNext: true,
+    });
+  }
   render() {
 
     return (
       <div>
-        <div className="board-row">
+      <table className="fixed-table">
+      <tbody>
+        <tr>
           {this.renderSquare(0)}
           {this.renderSquare(1)}
           {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
+        </tr>
+        <tr>
           {this.renderSquare(3)}
           {this.renderSquare(4)}
           {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
+        </tr>
+        <tr>
           {this.renderSquare(6)}
           {this.renderSquare(7)}
           {this.renderSquare(8)}
-        </div>
+        </tr>
+        <ResetButton class="resetButton" onClick={() => this.resetGame()}/>
+      </tbody>
+      </table>
       </div>
     );
   }
@@ -104,6 +129,13 @@ function winner(board, player){
         return false;
     }
 }
+function countMoves(board) {
+  let movesMade = 0;
+  for(let i = 0; i < board.length; i++) {
+    if (board[i] != null) movesMade++;
+  }
+  return movesMade;
+}
 function tie(board) {
   for(let i = 0; i < 9; i++) {
     if (board[i] !== 'X' && board[i] !== 'O') return false;
@@ -117,10 +149,7 @@ function findAiMove(board) {
   if(winner(board, 'X') || winner(board, 'O' || tie(board))) {
     return null;
   }
-  let movesMade = 0;
-  for(let i = 0; i < board.length; i++) {
-    if (board[i] != null) movesMade++;
-  }
+  let movesMade = countMoves(board);
 
   for(var i = 0; i < board.length; i++){
     let newBoard = validMove(i, minPlayer, board);
@@ -137,24 +166,22 @@ function findAiMove(board) {
 
 function minScore(board,depth) {
   if (winner(board, 'X')) {
-    return 10;
+    return 10* (9 - countMoves(board));
   } else if (winner(board, 'O')) {
-    return -10;
+    return -10 * (9 - countMoves(board));
   } else if (tie(board)) {
     return 0;
-  } else if (depth == 0) {
+  } else if (depth === 0) {
     console.log(depth);
     return 0;
   } else {
     var bestMoveValue = 100;
-    let move = 0;
     for (var i = 0; i < board.length; i++) {
       var newBoard = validMove(i, minPlayer, board);
       if (newBoard) {
         var predictedMoveValue = maxScore(newBoard,depth-1);
         if (predictedMoveValue < bestMoveValue) {
           bestMoveValue = predictedMoveValue;
-          move = i;
         }
       }
     }
@@ -163,23 +190,21 @@ function minScore(board,depth) {
 }
 function maxScore(board,depth) {
    if(winner(board, 'X')) {
-    return 10;
+    return 10 * (9 - countMoves(board));
   } else if(winner(board, 'O')) {
-    return -10;
+    return -10 * (9 - countMoves(board));
   } else if(tie(board)) {
     return 0;
-  } else if (depth == 0) {
+  } else if (depth === 0) {
     return 0;
   } else {
     var bestMoveValue = -100;
-    let move = 0;
     for (var i = 0; i < board.length; i++) {
       var newBoard = validMove(i, maxPlayer, board);
       if (newBoard) {
         var predictedMoveValue = minScore(newBoard,depth-1);
         if (predictedMoveValue > bestMoveValue) {
           bestMoveValue = predictedMoveValue;
-          move = i;
         }
       }
     }
