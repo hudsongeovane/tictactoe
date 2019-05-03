@@ -31,6 +31,7 @@ class Board extends React.Component {
     this.state = {
       boardstatus: Array(9).fill(null),
       xNext: true,
+      IAFirst: false,
     };
   }
   renderSquare(i) {
@@ -38,20 +39,25 @@ class Board extends React.Component {
   }
   handleClick(i) {
     const squares = this.state.boardstatus.slice();
+    console.log(this.state.xNext);
     if (squares[i] == null) { //For not clicking the same button twice.
-      squares[i] = 'X';//this.state.xNext ? 'X' : 'O';
-      this.setState({boardstatus: squares, xNext: !this.state.xNext});
-      var m = findAiMove(squares);
+      squares[i] = this.state.xNext ? 'X' : 'O';
+      //this.setState({boardstatus: squares, xNext: !this.state.xNext});
+      var m = findAiMove(squares,this.state.xNext ? 'O' : 'X');
       console.log(m);
-      squares[m] = 'O';
-      this.setState({boardstatus: squares, xNext: !this.state.xNext});
+      squares[m] = this.state.xNext ? 'O' : 'X'; //Not updated xNext yet.
+      this.setState({boardstatus: squares, xNext: this.state.xNext, IAFirst: this.state.IAFirst});
     }
   }
   resetGame() {
-    this.setState({
-      boardstatus: Array(9).fill(null),
-      xNext: true,
-    });
+    if (!this.state.IAFirst) {
+      const squares = Array(9).fill(null);
+      squares[0] = 'X';
+      this.setState({boardstatus: squares, xNext: false, IAFirst: true});
+    }
+    else {
+      this.setState({boardstatus: Array(9).fill(null), xNext: true, IAFirst: false});
+    }
   }
   render() {
 
@@ -83,19 +89,10 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nextPlayer: 'X',
-    };
-  }
   render() {
-    const status = 'Next player:' + this.state.nextPlayer;
-
     return (
       <div>
         <div>
-          <div className="status">{status}</div>
           <Board />
         </div>
         <div>
@@ -142,8 +139,9 @@ function tie(board) {
   }
   return true;
 }
-function findAiMove(board) {
-  var bestMoveScore = 100;
+function findAiMove(board,AIPlayer) {
+  console.log(AIPlayer);
+  var bestMoveScore = AIPlayer == 'X' ? -100 : 100;
   let move = null;
   //Test Every Possible Move if the game is not already over.
   if(winner(board, 'X') || winner(board, 'O' || tie(board))) {
@@ -152,13 +150,19 @@ function findAiMove(board) {
   let movesMade = countMoves(board);
 
   for(var i = 0; i < board.length; i++){
-    let newBoard = validMove(i, minPlayer, board);
+    let newBoard = validMove(i, AIPlayer, board);
     if(newBoard) {
-      var moveScore = maxScore(newBoard,9 - movesMade);
-      if (moveScore < bestMoveScore) {
-        bestMoveScore = moveScore;
-        move = i;
-      }
+      var moveScore = (AIPlayer == 'X') ? minScore(newBoard,9-movesMade) : maxScore(newBoard,9 - movesMade);
+      if (AIPlayer == 'O')
+        if (moveScore < bestMoveScore) {
+          bestMoveScore = moveScore;
+          move = i;
+        }
+      if (AIPlayer == 'X')
+        if (moveScore > bestMoveScore) {
+          bestMoveScore = moveScore;
+          move = i;
+        }
     }
   }
   return move;

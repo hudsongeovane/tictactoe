@@ -22,6 +22,10 @@
 .App-link {
   color: #61dafb;
 }
+a {
+  color:#61dafb;
+}
+
 .status {
   padding: 10px;
 }
