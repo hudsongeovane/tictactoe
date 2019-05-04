@@ -39,6 +39,7 @@ class Board extends React.Component {
   }
   handleClick(i) {
     const squares = this.state.boardstatus.slice();
+    if (winner(squares,'X') || winner(squares,'O')) return;
     if (squares[i] == null) { //For not clicking the same button twice.
       squares[i] = this.state.xNext ? 'X' : 'O';
       //this.setState({boardstatus: squares, xNext: !this.state.xNext});
@@ -59,10 +60,17 @@ class Board extends React.Component {
     }
   }
   render() {
-
+    let status = "";
+    if (winner(this.state.boardstatus,'X')) status = "Player X won the game. Click reset to play more";
+    if (winner(this.state.boardstatus,'O')) status = "Player O won the game. Click reset to play more";
+    if (tie(this.state.boardstatus)) status = "It is a tie. Click reset if you want to play more";
     return (
       <div>
-      <table className="fixed-table">
+      <div>
+        <p>{status}</p>
+      </div>
+      <div>
+      <table align="center">
       <tbody>
         <tr>
           {this.renderSquare(0)}
@@ -82,6 +90,7 @@ class Board extends React.Component {
         <ResetButton class="resetButton" onClick={() => this.resetGame()}/>
       </tbody>
       </table>
+      </div>
       </div>
     );
   }

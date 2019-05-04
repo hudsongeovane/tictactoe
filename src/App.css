@@ -19,6 +19,10 @@
   color: white;
 }
 
+.fixed-table {
+  align: center;
+}
+
 .App-link {
   color: #61dafb;
 }
