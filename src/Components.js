@@ -39,7 +39,6 @@ class Board extends React.Component {
   }
   handleClick(i) {
     const squares = this.state.boardstatus.slice();
-    console.log(this.state.xNext);
     if (squares[i] == null) { //For not clicking the same button twice.
       squares[i] = this.state.xNext ? 'X' : 'O';
       //this.setState({boardstatus: squares, xNext: !this.state.xNext});
@@ -141,7 +140,7 @@ function tie(board) {
 }
 function findAiMove(board,AIPlayer) {
   console.log(AIPlayer);
-  var bestMoveScore = AIPlayer == 'X' ? -100 : 100;
+  var bestMoveScore = AIPlayer === 'X' ? -100 : 100;
   let move = null;
   //Test Every Possible Move if the game is not already over.
   if(winner(board, 'X') || winner(board, 'O' || tie(board))) {
@@ -152,13 +151,15 @@ function findAiMove(board,AIPlayer) {
   for(var i = 0; i < board.length; i++){
     let newBoard = validMove(i, AIPlayer, board);
     if(newBoard) {
-      var moveScore = (AIPlayer == 'X') ? minScore(newBoard,9-movesMade) : maxScore(newBoard,9 - movesMade);
-      if (AIPlayer == 'O')
+      var moveScore = (AIPlayer === 'X') ? minScore(newBoard,9-movesMade) : maxScore(newBoard,10 - movesMade);
+      let s = "";
+      console.log(s.concat("move ",i," moveScore ",moveScore));
+      if (AIPlayer === 'O')
         if (moveScore < bestMoveScore) {
           bestMoveScore = moveScore;
           move = i;
         }
-      if (AIPlayer == 'X')
+      if (AIPlayer === 'X')
         if (moveScore > bestMoveScore) {
           bestMoveScore = moveScore;
           move = i;
@@ -170,9 +171,9 @@ function findAiMove(board,AIPlayer) {
 
 function minScore(board,depth) {
   if (winner(board, 'X')) {
-    return 10* (9 - countMoves(board));
+    return 10* (10 - countMoves(board)); //10 because countMoves can be 9
   } else if (winner(board, 'O')) {
-    return -10 * (9 - countMoves(board));
+    return -10 * (10 - countMoves(board));
   } else if (tie(board)) {
     return 0;
   } else if (depth === 0) {
@@ -194,9 +195,9 @@ function minScore(board,depth) {
 }
 function maxScore(board,depth) {
    if(winner(board, 'X')) {
-    return 10 * (9 - countMoves(board));
+    return 10 * (10 - countMoves(board));
   } else if(winner(board, 'O')) {
-    return -10 * (9 - countMoves(board));
+    return -10 * (10 - countMoves(board));
   } else if(tie(board)) {
     return 0;
   } else if (depth === 0) {
